@@ -57,4 +57,6 @@ dependencies {
 
     val fragmentVersion = "1.5.7"
     implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
+
+    implementation("androidx.recyclerview:recyclerview:1.3.1")
 }
