@@ -10,7 +10,7 @@ class CrimeListViewModel: ViewModel() {
     val crimeList = mutableListOf<Crime>()
     init {
         for (i in 1..100) {
-            crimeList.add(Crime(UUID.randomUUID(), "Crime #$i", Date(), i%2 == 0))
+            crimeList.add(Crime(UUID.randomUUID(), "Crime #$i", Date(), i%2 == 0, i%2 == 0))
         }
     }
 }

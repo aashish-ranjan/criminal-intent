@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/crime_title_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/crime_date_textview"
+        tools:text="Crime Title"/>
+
+    <TextView
+        android:id="@+id/crime_date_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/crime_title_textview"
+        app:layout_constraintTop_toBottomOf="@id/crime_title_textview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="18th August, 2023"/>
+
+    <ImageView
+        android:id="@+id/call_police_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_call_police"
+        android:contentDescription="@string/call_police"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_alignParentEnd="true" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
