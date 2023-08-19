@@ -17,10 +17,7 @@ class CrimeListAdapter(private val crimeList: List<Crime>): Adapter<CrimeHolder>
 
     override fun onBindViewHolder(holder: CrimeHolder, position: Int) {
         val crime = crimeList[position]
-        holder.binding.apply {
-            crimeTitleTextview.text = crime.title
-            crimeDateTextview.text = crime.date.toString()
-        }
+        holder.bind(crime)
     }
 
 }
