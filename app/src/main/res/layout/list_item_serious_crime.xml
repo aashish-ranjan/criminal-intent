@@ -13,6 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/crime_date_textview"
+        android:textAppearance="@style/FancyListItemText"
         tools:text="Crime Title"/>
 
     <TextView
