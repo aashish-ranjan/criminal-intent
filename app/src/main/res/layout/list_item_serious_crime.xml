@@ -25,10 +25,10 @@
         tools:text="18th August, 2023"/>
 
     <ImageView
-        android:id="@+id/call_police_icon"
+        android:id="@+id/serious_crime_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_call_police"
+        android:src="@drawable/ic_solved"
         android:contentDescription="@string/call_police"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

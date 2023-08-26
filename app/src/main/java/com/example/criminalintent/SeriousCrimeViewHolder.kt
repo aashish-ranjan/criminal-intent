@@ -11,7 +11,7 @@ class SeriousCrimeViewHolder(private val binding: ListItemSeriousCrimeBinding): 
             crimeTitleTextview.text = crime.title
             crimeDateTextview.text = crime.date.toString()
 
-            callPoliceIcon.setOnClickListener {
+            seriousCrimeIcon.setOnClickListener {
                 Toast.makeText(root.context, "Reporting ${crime.title} to police", Toast.LENGTH_SHORT).show()
             }
 
