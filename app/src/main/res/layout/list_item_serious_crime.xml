@@ -6,11 +6,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontal_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.00" />
+
     <TextView
         android:id="@+id/crime_title_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/horizontal_guideline"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/crime_date_textview"
         android:textAppearance="@style/FancyListItemText"
