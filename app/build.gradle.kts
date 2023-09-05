@@ -59,4 +59,9 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
 
     implementation("androidx.recyclerview:recyclerview:1.3.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+
 }
