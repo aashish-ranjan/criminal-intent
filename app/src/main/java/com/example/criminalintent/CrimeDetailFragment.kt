@@ -23,7 +23,7 @@ class CrimeDetailFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        crime = Crime(UUID.randomUUID(), "", Date(), false, false)
+        crime = Crime(UUID.randomUUID(), "", Date(), false)
     }
 
     override fun onCreateView(
