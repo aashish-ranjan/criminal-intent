@@ -1,17 +1,19 @@
 package com.example.criminalintent
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.criminalintent.databinding.FragmentCrimeListBinding
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CrimeListFragment: Fragment() {
     companion object {
@@ -21,7 +23,6 @@ class CrimeListFragment: Fragment() {
     private var _binding: FragmentCrimeListBinding? = null
     private val crimeListViewModel: CrimeListViewModel by viewModels()
 
-    private var job: Job? = null
     private val binding
         get() = checkNotNull(_binding) {
             "Binding is null"
@@ -38,22 +39,16 @@ class CrimeListFragment: Fragment() {
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        job = viewLifecycleOwner.lifecycleScope.launch {
-            crimeListViewModel.loadCrimes()
-            binding.crimeRecyclerView.adapter = CrimeListAdapter(crimeListViewModel.crimeList)
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "onViewCreated: crimeList size is ${crimeListViewModel.crimeList.size}")
-    }
-
-    override fun onStop() {
-        job?.cancel()
-        super.onStop()
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val crimeList = crimeListViewModel.loadCrimes()
+                withContext(Dispatchers.Main) {
+                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimeList)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
