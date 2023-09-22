@@ -11,9 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.criminalintent.databinding.FragmentCrimeListBinding
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class CrimeListFragment: Fragment() {
     companion object {
@@ -41,11 +40,13 @@ class CrimeListFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+        val adapter = CrimeListAdapter()
+        binding.crimeRecyclerView.adapter = adapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                val crimeList = crimeListViewModel.loadCrimes()
-                withContext(Dispatchers.Main) {
-                    binding.crimeRecyclerView.adapter = CrimeListAdapter(crimeList)
+                crimeListViewModel.crimeListStateFlow.collectLatest {
+                    adapter.submitList(it)
                 }
             }
         }
