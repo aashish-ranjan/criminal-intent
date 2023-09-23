@@ -46,7 +46,7 @@ class CrimeDetailFragment: Fragment() {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.crimeTitleEdittext.text.isNullOrBlank()) {
-                    Snackbar.make(binding.root, "Title cannot be empty", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, R.string.empty_title_warning, Snackbar.LENGTH_SHORT).show()
                 } else {
                     findNavController().popBackStack()
                 }
