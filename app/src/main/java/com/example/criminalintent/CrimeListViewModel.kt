@@ -12,8 +12,7 @@ class CrimeListViewModel: ViewModel() {
     private  val TAG = "CrimeListViewModel"
     private val repository = CrimeRepository.get()
     private val _crimeListStateFlow = MutableStateFlow<List<Crime>>(emptyList())
-    val crimeListStateFlow
-        get() = _crimeListStateFlow.asStateFlow()
+    val crimeListStateFlow = _crimeListStateFlow.asStateFlow()
 
     init {
         viewModelScope.launch {

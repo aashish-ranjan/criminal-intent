@@ -6,14 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.navArgs
 import com.example.criminalintent.databinding.FragmentCrimeDetailBinding
 import com.example.criminalintent.model.Crime
-import java.util.Date
-import java.util.UUID
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+
 
 class CrimeDetailFragment: Fragment() {
 
-    private lateinit var crime: Crime
     private var _binding: FragmentCrimeDetailBinding? = null
     private val args: CrimeDetailFragmentArgs by navArgs()
     private val crimeDetailViewModel: CrimeDetailViewModel by viewModels {
@@ -23,12 +28,6 @@ class CrimeDetailFragment: Fragment() {
         get() = checkNotNull(_binding) {
             "Binding is null"
         }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        crime = Crime(UUID.randomUUID(), "", Date(), false)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,19 +41,43 @@ class CrimeDetailFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                crimeDetailViewModel.crimeStateFlow.collectLatest {crime ->
+                    crime?.let { updateUi(it) }
+                }
+            }
+        }
+        attachListeners()
+    }
+
+    private fun attachListeners() {
         with(binding) {
-            crimeTitleHintEdittext.doOnTextChanged { text, _, _, _ ->
-                crime = crime.copy(title = text.toString())
+            crimeTitleEdittext.doOnTextChanged { text, _, _, _ ->
+                crimeDetailViewModel.updateCrime { oldCrime ->
+                    oldCrime.copy(title = text.toString())
+                }
             }
 
             crimeDateButton.apply {
-                text = crime.date.toString()
                 isEnabled = false
             }
 
             crimeSolvedCheckbox.setOnCheckedChangeListener { _, isChecked ->
-                crime = crime.copy(isSolved = isChecked)
+                crimeDetailViewModel.updateCrime { oldCrime ->
+                    oldCrime.copy(isSolved = isChecked)
+                }
             }
+        }
+    }
+
+    private fun updateUi(crime: Crime) {
+        with(binding) {
+            if (crimeTitleEdittext.text.toString() != crime.title) {
+                crimeTitleEdittext.setText(crime.title)
+            }
+            crimeDateButton.text = crime.date.toString()
+            crimeSolvedCheckbox.isChecked = crime.isSolved
         }
     }
 
