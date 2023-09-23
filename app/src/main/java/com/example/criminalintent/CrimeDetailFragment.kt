@@ -15,6 +15,10 @@ class CrimeDetailFragment: Fragment() {
 
     private lateinit var crime: Crime
     private var _binding: FragmentCrimeDetailBinding? = null
+    private val args: CrimeDetailFragmentArgs by navArgs()
+    private val crimeDetailViewModel: CrimeDetailViewModel by viewModels {
+        CrimeDetailViewModelFactory(args.crimeId)
+    }
     private val binding
         get() = checkNotNull(_binding) {
             "Binding is null"
