@@ -56,11 +56,19 @@ class CrimeDetailFragment: Fragment() {
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
-        setFragmentResultListener(DatePickerFragment.REQ_KEY_PICK_DATE) {
-                _, bundle ->
+        setFragmentResultListener(DatePickerFragment.REQ_KEY_PICK_DATE) { _, bundle ->
             val selectedDate = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_SELECTED_DATE) as Date
             crimeDetailViewModel.updateCrime { oldCrime ->
                 oldCrime.copy(date = selectedDate)
+            }
+        }
+        setFragmentResultListener(TimePickerFragment.REQ_KEY_PICK_TIME) { _, bundle ->
+            val hourOfDay = bundle.getInt(TimePickerFragment.BUNDLE_KEY_HOUR)
+            val minute = bundle.getInt(TimePickerFragment.BUNDLE_KEY_MINUTE)
+            crimeDetailViewModel.updateCrime { oldCrime ->
+                val newDate = crimeDetailViewModel.getNewDate(oldCrime.date, hourOfDay, minute)
+                oldCrime.copy(date = newDate)
+
             }
         }
     }
@@ -86,9 +94,15 @@ class CrimeDetailFragment: Fragment() {
                 }
             }
 
-            crimeDateButton.setOnClickListener {
+            crimeDatePickerButton.setOnClickListener {
                 val crimeDate = crimeDetailViewModel.crimeStateFlow.value?.date ?: Date()
                 val action = CrimeDetailFragmentDirections.actionCrimeDetailFragmentToDatePickerFragment(crimeDate)
+                findNavController().navigate(action)
+            }
+
+            crimeTimePickerButton.setOnClickListener {
+                val crimeDate = crimeDetailViewModel.crimeStateFlow.value?.date ?: Date()
+                val action = CrimeDetailFragmentDirections.actionCrimeDetailFragmentToTimePickerFragment(crimeDate)
                 findNavController().navigate(action)
             }
 
@@ -105,7 +119,7 @@ class CrimeDetailFragment: Fragment() {
             if (crimeTitleEdittext.text.toString() != crime.title) {
                 crimeTitleEdittext.setText(crime.title)
             }
-            crimeDateButton.text = crime.date.toString()
+            crimeDatePickerButton.text = crime.date.toString()
             crimeSolvedCheckbox.isChecked = crime.isSolved
         }
     }
