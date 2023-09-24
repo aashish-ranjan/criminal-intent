@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,7 @@ import com.example.criminalintent.model.Crime
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.Date
 
 
 class CrimeDetailFragment: Fragment() {
@@ -76,8 +78,10 @@ class CrimeDetailFragment: Fragment() {
                 }
             }
 
-            crimeDateButton.apply {
-                isEnabled = false
+            crimeDateButton.setOnClickListener {
+                val crimeDate = crimeDetailViewModel.crimeStateFlow.value?.date ?: Date()
+                val action = CrimeDetailFragmentDirections.actionCrimeDetailFragmentToDatePickerFragment(crimeDate)
+                findNavController().navigate(action)
             }
 
             crimeSolvedCheckbox.setOnCheckedChangeListener { _, isChecked ->
