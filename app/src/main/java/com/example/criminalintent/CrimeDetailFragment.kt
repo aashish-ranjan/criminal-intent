@@ -55,6 +55,14 @@ class CrimeDetailFragment: Fragment() {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
+
+        setFragmentResultListener(DatePickerFragment.REQ_KEY_PICK_DATE) {
+                _, bundle ->
+            val selectedDate = bundle.getSerializable(DatePickerFragment.BUNDLE_KEY_SELECTED_DATE) as Date
+            crimeDetailViewModel.updateCrime { oldCrime ->
+                oldCrime.copy(date = selectedDate)
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
