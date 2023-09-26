@@ -1,7 +1,6 @@
 package com.example.criminalintent
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Room
 import com.example.criminalintent.database.CrimeDatabase
 import com.example.criminalintent.model.Crime
@@ -17,10 +16,9 @@ class CrimeRepository private constructor(context: Context, private val scope: C
         context.applicationContext,
         CrimeDatabase::class.java,
         DATABASE_NAME
-    ).createFromAsset(DATABASE_NAME).build()
+    ).build()
 
     fun getCrimes(): Flow<List<Crime>> {
-        Log.d("CRIMEREPOSITORY", "fetching crimelist")
         return database.crimeDao().getCrimes()
     }
 
