@@ -2,6 +2,9 @@ package com.example.criminalintent
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
@@ -45,6 +48,7 @@ class CrimeDetailFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.crimeTitleEdittext.text.isNullOrBlank()) {
@@ -84,6 +88,27 @@ class CrimeDetailFragment: Fragment() {
             }
         }
         attachListeners()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_crime_detail, menu)
+        menu.findItem(R.id.menu_item_delete_crime).isVisible = !crimeDetailViewModel.addNewCrime
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.menu_item_delete_crime -> {
+                deleteCrime()
+                true
+            }
+            else ->  super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun deleteCrime() {
+        crimeDetailViewModel.deleteCrime()
+        requireActivity().onBackPressed()
     }
 
     private fun attachListeners() {

@@ -36,6 +36,12 @@ class CrimeRepository private constructor(context: Context, private val scope: C
         }
     }
 
+    fun deleteCrime(crime: Crime) {
+        scope.launch {
+            database.crimeDao().deleteCrime(crime)
+        }
+    }
+
     companion object {
         private const val DATABASE_NAME = "crime-database"
         private var INSTANCE: CrimeRepository? = null

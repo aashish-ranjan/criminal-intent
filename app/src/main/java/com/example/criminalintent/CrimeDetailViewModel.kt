@@ -21,7 +21,8 @@ class CrimeDetailViewModel(crimeId: UUID?): ViewModel() {
     )
     val crimeStateFlow = _crimeStateFlow.asStateFlow()
     private val repository = CrimeRepository.get()
-    private val addNewCrime = crimeId == null
+    val addNewCrime = crimeId == null
+    private var shouldDeleteCrime = false
 
     init {
         crimeId?.let {id ->
@@ -37,10 +38,16 @@ class CrimeDetailViewModel(crimeId: UUID?): ViewModel() {
         }
     }
 
+    fun deleteCrime() {
+        shouldDeleteCrime = true
+    }
+
     override fun onCleared() {
         _crimeStateFlow.value.let { crime ->
             if (addNewCrime) {
                 repository.insertCrime(crime)
+            } else if (shouldDeleteCrime) {
+                repository.deleteCrime(crime)
             } else {
                 repository.updateCrime(crime)
             }
