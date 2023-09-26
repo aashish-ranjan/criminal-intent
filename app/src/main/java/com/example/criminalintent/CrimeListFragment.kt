@@ -15,7 +15,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.criminalintent.databinding.FragmentCrimeListBinding
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -73,11 +72,16 @@ class CrimeListFragment: Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.menu_item_add_crime -> {
-                Snackbar.make(binding.root, "plus clicked", Snackbar.LENGTH_SHORT).show()
+                addCrime()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun addCrime() {
+        val action = CrimeListFragmentDirections.actionCrimeListFragmentToCrimeDetailFragment(null)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

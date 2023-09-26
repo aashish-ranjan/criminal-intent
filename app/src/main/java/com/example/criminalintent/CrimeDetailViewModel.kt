@@ -14,29 +14,36 @@ import java.util.Calendar
 import java.util.Date
 import java.util.UUID
 
-class CrimeDetailViewModel(private val crimeId: UUID): ViewModel() {
+class CrimeDetailViewModel(crimeId: UUID?): ViewModel() {
 
-    private val _crimeStateFlow: MutableStateFlow<Crime?> = MutableStateFlow(null)
+    private val _crimeStateFlow: MutableStateFlow<Crime> = MutableStateFlow(
+        Crime(UUID.randomUUID(), "", Date(), false)
+    )
     val crimeStateFlow = _crimeStateFlow.asStateFlow()
     private val repository = CrimeRepository.get()
+    private val addNewCrime = crimeId == null
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            _crimeStateFlow.value = repository.getCrime(crimeId)
-        }
-    }
-
-    fun updateCrime(onUpdate: (Crime) -> Crime) {
-        _crimeStateFlow.update {
-            it?.let { oldCrime ->
-                onUpdate(oldCrime)
+        crimeId?.let {id ->
+            viewModelScope.launch(Dispatchers.IO) {
+                _crimeStateFlow.value = repository.getCrime(id)
             }
         }
     }
 
+    fun updateCrime(onUpdate: (Crime) -> Crime) {
+        _crimeStateFlow.update { oldCrime ->
+            onUpdate(oldCrime)
+        }
+    }
+
     override fun onCleared() {
-        _crimeStateFlow.value?.let {
-            repository.updateCrime(it)
+        _crimeStateFlow.value.let { crime ->
+            if (addNewCrime) {
+                repository.insertCrime(crime)
+            } else {
+                repository.updateCrime(crime)
+            }
         }
         super.onCleared()
     }
@@ -50,7 +57,7 @@ class CrimeDetailViewModel(private val crimeId: UUID): ViewModel() {
     }
 }
 
-class CrimeDetailViewModelFactory(private val crimeId: UUID): ViewModelProvider.Factory {
+class CrimeDetailViewModelFactory(private val crimeId: UUID?): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CrimeDetailViewModel::class.java)) {
             return CrimeDetailViewModel(crimeId) as T

@@ -32,6 +32,12 @@ class CrimeRepository private constructor(context: Context, private val scope: C
         }
     }
 
+    fun insertCrime(crime: Crime) {
+        scope.launch {
+            database.crimeDao().insertCrime(crime)
+        }
+    }
+
     companion object {
         private const val DATABASE_NAME = "crime-database"
         private var INSTANCE: CrimeRepository? = null

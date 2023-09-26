@@ -78,8 +78,8 @@ class CrimeDetailFragment: Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                crimeDetailViewModel.crimeStateFlow.collectLatest {crime ->
-                    crime?.let { updateUi(it) }
+                crimeDetailViewModel.crimeStateFlow.collectLatest {
+                    updateUi(it)
                 }
             }
         }
@@ -95,13 +95,13 @@ class CrimeDetailFragment: Fragment() {
             }
 
             crimeDatePickerButton.setOnClickListener {
-                val crimeDate = crimeDetailViewModel.crimeStateFlow.value?.date ?: Date()
+                val crimeDate = crimeDetailViewModel.crimeStateFlow.value.date
                 val action = CrimeDetailFragmentDirections.actionCrimeDetailFragmentToDatePickerFragment(crimeDate)
                 findNavController().navigate(action)
             }
 
             crimeTimePickerButton.setOnClickListener {
-                val crimeDate = crimeDetailViewModel.crimeStateFlow.value?.date ?: Date()
+                val crimeDate = crimeDetailViewModel.crimeStateFlow.value.date
                 val action = CrimeDetailFragmentDirections.actionCrimeDetailFragmentToTimePickerFragment(crimeDate)
                 findNavController().navigate(action)
             }
