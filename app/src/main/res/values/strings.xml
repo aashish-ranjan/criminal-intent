@@ -7,4 +7,5 @@
     <string name="call_police">Call police</string>
     <string name="empty_title_warning">Title cannot be empty</string>
     <string name="content_description_time_picker">Time picker"</string>
+    <string name="add_new_crime">New Crime"</string>
 </resources>
