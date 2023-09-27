@@ -136,6 +136,14 @@ class CrimeDetailFragment: Fragment() {
                     oldCrime.copy(isSolved = isChecked)
                 }
             }
+
+            selectSuspectButton.setOnClickListener {
+
+            }
+
+            shareCrimeReportButton.setOnClickListener {
+
+            }
         }
     }
 

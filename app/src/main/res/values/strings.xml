@@ -9,4 +9,6 @@
     <string name="content_description_time_picker">Time picker"</string>
     <string name="add_new_crime">New Crime"</string>
     <string name="delete_crime">Delete Crime"</string>
+    <string name="select_suspect">Select suspect"</string>
+    <string name="share_crime_report">Share crime report"</string>
 </resources>
