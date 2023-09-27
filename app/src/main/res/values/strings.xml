@@ -11,4 +11,10 @@
     <string name="delete_crime">Delete Crime"</string>
     <string name="select_suspect">Select suspect"</string>
     <string name="share_crime_report">Share crime report"</string>
+    <string name="crime_report_title">Crime Report"</string>
+    <string name="crime_report_text">"%s. The crime was discovered on %s. %s, and %s."</string>
+    <string name="solved_case_subtext">"The case is solved</string>
+    <string name="unsolved_case_subtext">"The case is unsolved</string>
+    <string name="unknown_suspect_subtext">"there is no suspect</string>
+    <string name="known_suspect_subtext">"the suspect is %s</string>
 </resources>

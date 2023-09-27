@@ -1,5 +1,6 @@
 package com.example.criminalintent
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -19,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.criminalintent.databinding.FragmentCrimeDetailBinding
 import com.example.criminalintent.model.Crime
+import com.example.criminalintent.utils.DateTimeUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -142,7 +144,14 @@ class CrimeDetailFragment: Fragment() {
             }
 
             shareCrimeReportButton.setOnClickListener {
-
+                val sendIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, getCrimeReport(crimeDetailViewModel.crimeStateFlow.value))
+                    putExtra(Intent.EXTRA_TITLE, getString(R.string.crime_report_title))
+                    type = "text/plain"
+                }
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
             }
         }
     }
@@ -155,6 +164,18 @@ class CrimeDetailFragment: Fragment() {
             crimeDatePickerButton.text = crime.date.toString()
             crimeSolvedCheckbox.isChecked = crime.isSolved
         }
+    }
+    private fun getCrimeReport(crime: Crime): String {
+        val solvedString = getString(
+            if (crime.isSolved) R.string.solved_case_subtext
+            else R.string.unsolved_case_subtext
+        )
+        val dateString = DateTimeUtils.getReadableDateAndTime(crime.date)
+
+        val suspectString = if (crime.suspect.isBlank()) getString(R.string.unknown_suspect_subtext)
+                            else getString(R.string.known_suspect_subtext, crime.suspect)
+
+        return getString(R.string.crime_report_text, crime.title, dateString, solvedString, suspectString)
     }
 
     override fun onDestroyView() {
