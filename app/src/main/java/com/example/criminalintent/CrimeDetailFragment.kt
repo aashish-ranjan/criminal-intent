@@ -1,7 +1,10 @@
 package com.example.criminalintent
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -34,6 +38,33 @@ class CrimeDetailFragment: Fragment() {
     private val crimeDetailViewModel: CrimeDetailViewModel by viewModels {
         CrimeDetailViewModelFactory(args.crimeId)
     }
+
+    private val selectSuspectFromContacts = registerForActivityResult(ActivityResultContracts.PickContact()) { uri ->
+        uri?.let {
+            extractNameFromUri(uri)
+        }
+    }
+
+    private fun extractNameFromUri(contactUri: Uri) {
+        val projection = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
+
+        val queryCursor = requireActivity().contentResolver.query(
+            contactUri,
+            projection,
+            null,
+            null,
+            null
+        )
+        queryCursor?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val suspectName = cursor.getString(0)
+                crimeDetailViewModel.updateCrime {oldCrime ->
+                    oldCrime.copy(suspect = suspectName)
+                }
+            }
+        }
+    }
+
     private val binding
         get() = checkNotNull(_binding) {
             "Binding is null"
@@ -139,8 +170,15 @@ class CrimeDetailFragment: Fragment() {
                 }
             }
 
-            selectSuspectButton.setOnClickListener {
-
+            val selectSuspectIntent = selectSuspectFromContacts.contract.createIntent(
+                requireContext(), null
+            )
+            if (canResolve(selectSuspectIntent)) {
+                selectSuspectButton.setOnClickListener {
+                    selectSuspectFromContacts.launch(null)
+                }
+            } else {
+                selectSuspectButton.isEnabled = false
             }
 
             shareCrimeReportButton.setOnClickListener {
@@ -149,8 +187,6 @@ class CrimeDetailFragment: Fragment() {
                 } else {
                     launchShareSheet()
                 }
-                val shareIntent = Intent.createChooser(sendIntent, null)
-                startActivity(shareIntent)
             }
         }
     }
@@ -173,6 +209,7 @@ class CrimeDetailFragment: Fragment() {
             }
             crimeDatePickerButton.text = crime.date.toString()
             crimeSolvedCheckbox.isChecked = crime.isSolved
+            selectSuspectButton.text = crime.suspect.ifEmpty { getString(R.string.select_suspect) }
         }
     }
     private fun getCrimeReport(crime: Crime): String {
@@ -186,6 +223,15 @@ class CrimeDetailFragment: Fragment() {
                             else getString(R.string.known_suspect_subtext, crime.suspect)
 
         return getString(R.string.crime_report_text, crime.title, dateString, solvedString, suspectString)
+    }
+
+    private fun canResolve(intent: Intent): Boolean {
+        val packageManager = requireActivity().packageManager
+        val resolvedActivity = packageManager.resolveActivity(
+            intent,
+            PackageManager.MATCH_DEFAULT_ONLY
+        )
+        return resolvedActivity != null
     }
 
     override fun onDestroyView() {
