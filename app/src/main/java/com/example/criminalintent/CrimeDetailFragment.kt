@@ -144,16 +144,26 @@ class CrimeDetailFragment: Fragment() {
             }
 
             shareCrimeReportButton.setOnClickListener {
-                val sendIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, getCrimeReport(crimeDetailViewModel.crimeStateFlow.value))
-                    putExtra(Intent.EXTRA_TITLE, getString(R.string.crime_report_title))
-                    type = "text/plain"
+                if (crimeTitleEdittext.text.toString().isEmpty()) {
+                    Snackbar.make(binding.root, R.string.empty_title_warning, Snackbar.LENGTH_SHORT).show()
+                } else {
+                    launchShareSheet()
                 }
                 val shareIntent = Intent.createChooser(sendIntent, null)
                 startActivity(shareIntent)
             }
         }
+    }
+
+    private fun launchShareSheet() {
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, getCrimeReport(crimeDetailViewModel.crimeStateFlow.value))
+            putExtra(Intent.EXTRA_TITLE, getString(R.string.crime_report_title))
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 
     private fun updateUi(crime: Crime) {
