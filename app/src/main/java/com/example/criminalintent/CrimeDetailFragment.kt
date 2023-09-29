@@ -57,7 +57,8 @@ class CrimeDetailFragment: Fragment() {
         )
         queryCursor?.use { cursor ->
             if (cursor.moveToFirst()) {
-                val suspectName = cursor.getString(0)
+                val nameColumnIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
+                val suspectName = cursor.getString(nameColumnIndex)
                 crimeDetailViewModel.updateCrime {oldCrime ->
                     oldCrime.copy(suspect = suspectName)
                 }
