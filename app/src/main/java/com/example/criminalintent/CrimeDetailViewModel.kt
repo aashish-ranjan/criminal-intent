@@ -23,6 +23,7 @@ class CrimeDetailViewModel(crimeId: UUID?): ViewModel() {
     private val repository = CrimeRepository.get()
     val addNewCrime = crimeId == null
     private var shouldDeleteCrime = false
+    var photoFileName: String? = null
 
     init {
         crimeId?.let {id ->

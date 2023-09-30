@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,6 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
+import androidx.core.view.doOnLayout
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -25,9 +28,11 @@ import androidx.navigation.fragment.navArgs
 import com.example.criminalintent.databinding.FragmentCrimeDetailBinding
 import com.example.criminalintent.model.Crime
 import com.example.criminalintent.utils.DateTimeUtils
+import com.example.criminalintent.utils.PictureUtils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.Date
 
 
@@ -42,6 +47,16 @@ class CrimeDetailFragment: Fragment() {
     private val selectSuspectFromContacts = registerForActivityResult(ActivityResultContracts.PickContact()) { uri ->
         uri?.let {
             extractNameFromUri(uri)
+        }
+    }
+
+    private val capturePhotoContracts = registerForActivityResult(ActivityResultContracts.TakePicture()) { capturedSuccessfully ->
+        if (capturedSuccessfully && crimeDetailViewModel.photoFileName != null) {
+            crimeDetailViewModel.updateCrime {  oldCrime ->
+                oldCrime.copy(photoFileName = crimeDetailViewModel.photoFileName)
+            }
+        } else {
+            Snackbar.make(binding.root, R.string.failed_to_save_photo, Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -182,6 +197,15 @@ class CrimeDetailFragment: Fragment() {
                 selectSuspectButton.isEnabled = false
             }
 
+            captureImageButton.setOnClickListener {
+                if (canResolve(Intent(MediaStore.ACTION_IMAGE_CAPTURE))) {
+                    launchCamera()
+                } else {
+                    Snackbar.make(binding.root, R.string.no_camera_app_available, Snackbar.LENGTH_SHORT).show()
+                }
+            }
+
+
             shareCrimeReportButton.setOnClickListener {
                 if (crimeTitleEdittext.text.toString().isEmpty()) {
                     Snackbar.make(binding.root, R.string.empty_title_warning, Snackbar.LENGTH_SHORT).show()
@@ -190,6 +214,13 @@ class CrimeDetailFragment: Fragment() {
                 }
             }
         }
+    }
+
+    private fun launchCamera() {
+        crimeDetailViewModel.photoFileName = "IMG-${Date()}.JPG"
+        val photoFile = File(requireContext().filesDir, crimeDetailViewModel.photoFileName)
+        val photoUri = FileProvider.getUriForFile(requireContext(), "${requireContext().packageName}.fileprovider", photoFile)
+        capturePhotoContracts.launch(photoUri)
     }
 
     private fun launchShareSheet() {
@@ -205,6 +236,7 @@ class CrimeDetailFragment: Fragment() {
 
     private fun updateUi(crime: Crime) {
         with(binding) {
+            updateCrimeImage(crime.photoFileName)
             if (crimeTitleEdittext.text.toString() != crime.title) {
                 crimeTitleEdittext.setText(crime.title)
             }
@@ -213,6 +245,25 @@ class CrimeDetailFragment: Fragment() {
             selectSuspectButton.text = crime.suspect.ifEmpty { getString(R.string.select_suspect) }
         }
     }
+
+    private fun updateCrimeImage(photoFileName: String?) {
+        with(binding) {
+            if (crimeImage.tag != photoFileName) {
+                val photoFile = photoFileName?.let { File(requireContext().filesDir, it) }
+                if (photoFile?.exists() == true) {
+                    crimeImage.doOnLayout { measuredView ->
+                        val scaledBitMap = PictureUtils.getScaledBitmap(photoFile.path, measuredView.width, measuredView.height)
+                        crimeImage.setImageBitmap(scaledBitMap)
+                        crimeImage.tag = photoFile
+                    }
+                } else {
+                    crimeImage.setImageBitmap(null)
+                    crimeImage.tag = null
+                }
+            }
+        }
+    }
+
     private fun getCrimeReport(crime: Crime): String {
         val solvedString = getString(
             if (crime.isSolved) R.string.solved_case_subtext

@@ -18,5 +18,7 @@
     <string name="unknown_suspect_subtext">"there is no suspect</string>
     <string name="known_suspect_subtext">"the suspect is %s</string>
     <string name="capture_image">Capture image"</string>
-    <string name="crime_suspect_image">Crime suspect image"</string>
+    <string name="crime_image">Crime image"</string>
+    <string name="failed_to_save_photo">Failed to save photo"</string>
+    <string name="no_camera_app_available">No camera app is available"</string>
 </resources>
