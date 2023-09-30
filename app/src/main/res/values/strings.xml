@@ -24,4 +24,6 @@
     <string name="failed_to_save_photo">Failed to save photo</string>
     <string name="no_camera_app_available">No camera app is available</string>
     <string name="item_crime_list_description">%s Crime %s, dated %s"</string>
+    <string name="crime_image_successful_update_feedback">Crime image updated with the captured image</string>
+    <string name="crime_image_failed_update_feedback">Failed to update crime image</string>
 </resources>

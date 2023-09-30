@@ -1,8 +1,10 @@
 package com.example.criminalintent
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.provider.MediaStore
@@ -12,6 +14,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -55,7 +59,9 @@ class CrimeDetailFragment: Fragment() {
             crimeDetailViewModel.updateCrime {  oldCrime ->
                 oldCrime.copy(photoFileName = crimeDetailViewModel.photoFileName)
             }
+            announceToTalkBack(getString(R.string.crime_image_successful_update_feedback))
         } else {
+            announceToTalkBack(getString(R.string.crime_image_failed_update_feedback))
             Snackbar.make(binding.root, R.string.failed_to_save_photo, Snackbar.LENGTH_SHORT).show()
         }
     }
@@ -286,6 +292,19 @@ class CrimeDetailFragment: Fragment() {
             PackageManager.MATCH_DEFAULT_ONLY
         )
         return resolvedActivity != null
+    }
+
+    private fun announceToTalkBack(message: String) {
+        val accessibilityManager = requireContext().getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        if (accessibilityManager.isEnabled) {
+            val event = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                AccessibilityEvent(AccessibilityEvent.TYPE_ANNOUNCEMENT)
+            } else {
+                AccessibilityEvent.obtain(AccessibilityEvent.TYPE_ANNOUNCEMENT)
+            }
+            event.text.add(message)
+            accessibilityManager.sendAccessibilityEvent(event)
+        }
     }
 
     override fun onDestroyView() {

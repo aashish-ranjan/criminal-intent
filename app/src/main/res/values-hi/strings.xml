@@ -23,5 +23,7 @@
     <string name="crime_image_unset">क्राइम छवि (सेट नहीं)</string>
     <string name="failed_to_save_photo">फ़ोटो सहेजने में विफल रहा</string>
     <string name="no_camera_app_available">कोई कैमरा ऐप्लिकेशन उपलब्ध नहीं है</string>
-    <string name="item_crime_list_description">%s क्राइम %s, %s तारीख़ का"</string>
+    <string name="item_crime_list_description">%s क्राइम %s, %s तारीख़ का</string>
+    <string name="crime_image_successful_update_feedback">क्राइम छवि को खिचवाई गई छवि के साथ अपडेट किया गया</string>
+    <string name="crime_image_failed_update_feedback">क्राइम छवि को अपडेट करने में विफल रहा</string>
 </resources>
