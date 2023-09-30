@@ -255,10 +255,12 @@ class CrimeDetailFragment: Fragment() {
                         val scaledBitMap = PictureUtils.getScaledBitmap(photoFile.path, measuredView.width, measuredView.height)
                         crimeImage.setImageBitmap(scaledBitMap)
                         crimeImage.tag = photoFile
+                        crimeImage.contentDescription = getString(R.string.crime_image_set)
                     }
                 } else {
                     crimeImage.setImageBitmap(null)
                     crimeImage.tag = null
+                    crimeImage.contentDescription = getString(R.string.crime_image_unset)
                 }
             }
         }

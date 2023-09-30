@@ -12,8 +12,12 @@ class NormalCrimeHolder(private val binding: ListItemNormalCrimeBinding): ViewHo
             crimeTitleTextview.text = crime.title
             crimeDateTextview.text = DateFormat.getDateInstance(DateFormat.FULL).format(crime.date)
 
-            root.setOnClickListener{
-                onCrimeItemClick(crime.id)
+            root.apply {
+                setOnClickListener{
+                    onCrimeItemClick(crime.id)
+                }
+                val solvedLabel = context.getString(if (crime.isSolved) R.string.crime_solved_label else R.string.crime_unsolved_label)
+                contentDescription = context.getString(R.string.item_crime_list_description, solvedLabel, crime.title, crimeDateTextview.text)
             }
         }
     }

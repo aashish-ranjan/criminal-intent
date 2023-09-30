@@ -4,6 +4,7 @@
     <string name="crime_title_label">Title</string>
     <string name="crime_details_label">Details</string>
     <string name="crime_solved_label">Solved</string>
+    <string name="crime_unsolved_label">Unsolved</string>
     <string name="call_police">Call police</string>
     <string name="empty_title_warning">Title cannot be empty</string>
     <string name="content_description_time_picker">Time picker"</string>
@@ -18,7 +19,9 @@
     <string name="unknown_suspect_subtext">"there is no suspect</string>
     <string name="known_suspect_subtext">"the suspect is %s</string>
     <string name="capture_image">Capture image"</string>
-    <string name="crime_image">Crime image"</string>
+    <string name="crime_image_set">Crime image (set)"</string>
+    <string name="crime_image_unset">Crime image (not set)"</string>
     <string name="failed_to_save_photo">Failed to save photo"</string>
     <string name="no_camera_app_available">No camera app is available"</string>
+    <string name="item_crime_list_description">%s Crime %s, dated %s"</string>
 </resources>

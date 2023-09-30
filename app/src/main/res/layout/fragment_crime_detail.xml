@@ -23,7 +23,7 @@
                 android:id="@+id/crime_image"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:contentDescription="@string/crime_image"
+                android:contentDescription="@string/crime_image_unset"
                 android:background="@color/black"/>
 
             <ImageView
