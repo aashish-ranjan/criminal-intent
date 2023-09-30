@@ -247,20 +247,20 @@ class CrimeDetailFragment: Fragment() {
     }
 
     private fun updateCrimeImage(photoFileName: String?) {
-        with(binding) {
-            if (crimeImage.tag != photoFileName) {
+        with(binding.crimeImage) {
+            if (tag != photoFileName) {
                 val photoFile = photoFileName?.let { File(requireContext().filesDir, it) }
                 if (photoFile?.exists() == true) {
-                    crimeImage.doOnLayout { measuredView ->
+                    doOnLayout { measuredView ->
                         val scaledBitMap = PictureUtils.getScaledBitmap(photoFile.path, measuredView.width, measuredView.height)
-                        crimeImage.setImageBitmap(scaledBitMap)
-                        crimeImage.tag = photoFile
-                        crimeImage.contentDescription = getString(R.string.crime_image_set)
+                        setImageBitmap(scaledBitMap)
+                        tag = photoFile
+                        contentDescription = getString(R.string.crime_image_set)
                     }
                 } else {
-                    crimeImage.setImageBitmap(null)
-                    crimeImage.tag = null
-                    crimeImage.contentDescription = getString(R.string.crime_image_unset)
+                    setImageBitmap(null)
+                    tag = null
+                    contentDescription = getString(R.string.crime_image_unset)
                 }
             }
         }

@@ -64,12 +64,13 @@
         android:id="@+id/crime_details_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="@string/crime_details_label"/>
+        android:text="@string/crime_details_label" />
 
     <LinearLayout
         android:id="@+id/date_time_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_gravity="center_vertical">
 
         <Button
