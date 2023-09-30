@@ -240,7 +240,7 @@ class CrimeDetailFragment: Fragment() {
             if (crimeTitleEdittext.text.toString() != crime.title) {
                 crimeTitleEdittext.setText(crime.title)
             }
-            crimeDatePickerButton.text = crime.date.toString()
+            crimeDatePickerButton.text = DateTimeUtils.getReadableDateAndTime(crime.date)
             crimeSolvedCheckbox.isChecked = crime.isSolved
             selectSuspectButton.text = crime.suspect.ifEmpty { getString(R.string.select_suspect) }
         }

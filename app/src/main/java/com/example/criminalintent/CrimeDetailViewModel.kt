@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 import java.util.UUID
 
 class CrimeDetailViewModel(crimeId: UUID?): ViewModel() {
@@ -57,7 +58,7 @@ class CrimeDetailViewModel(crimeId: UUID?): ViewModel() {
     }
 
     fun getNewDate(date: Date, hourOfDay: Int, minute: Int): Date {
-        return Calendar.getInstance().apply {
+        return Calendar.getInstance(Locale.getDefault()).apply {
             time = date
             set(Calendar.HOUR_OF_DAY, hourOfDay)
             set(Calendar.MINUTE, minute)
